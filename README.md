@@ -1,3 +1,47 @@
+# Superteam OS (Solana OS, Superteam Brasil edition)
+
+A fork of [solana-foundation/solana-os](https://github.com/solana-foundation/solana-os)
+with the Superteam Brasil brand: palette, logos, boot screen and typefaces. Everything
+else (apps, game, mesh, App Store, server) is upstream's and keeps working.
+
+What the edition changes:
+
+| What | Where |
+|---|---|
+| Palette (Emerald `#008b4c`, Yellow `#ffd23f`, Dark Green `#1b231d`, Off-White `#f5e8ca`) and `OS_NAME` | `main/core/theme.h` |
+| Light theme colours | `ui_col()` in `main/core/ui.c` |
+| Logos (status bar, boot screen, About) | `tools/brand/` -> `tools/gen_assets.sh` |
+| Fonts: Archivo Semi Expanded, Inter, JetBrains Mono (OFL), with Latin-1 accents | `tools/fonts/` -> `tools/gen_assets.sh` |
+| Boot screen / About | `os_splash()` in `main/core/os.c`, `main/apps/about/about_app.c` |
+
+The version stays upstream's (`CONFIG_APP_PROJECT_VER`) so the badge server and the
+App Store treat the badge as a normal one. Regenerate assets with
+`python3 -m venv .venv && .venv/bin/pip install pillow fonttools && sh tools/gen_assets.sh`.
+
+### Build, flash, emulate
+
+```sh
+source ~/.espressif/v6.0.1/esp-idf/export.sh     # ESP-IDF v6.0.1 (Python >= 3.10)
+idf.py build
+idf.py -p /dev/cu.usbserial-XXX -b 460800 flash  # keeps NVS: the badge keeps its ID
+
+# Browser emulator (needs Emscripten and one idf.py build first)
+emcmake cmake -S emulator -B emulator/build -DCMAKE_BUILD_TYPE=MinSizeRel -DEMU_OUT_DIR="$PWD/emulator/web"
+cmake --build emulator/build -j
+cd emulator/web && python3 -m http.server 8787   # open http://127.0.0.1:8787
+```
+
+`emulator/web/index.html` is a standalone page for the emulator (screen, buttons,
+LEDs, console); upstream's page lives in Solana Foundation's private site repo.
+Without that site's server the emulator runs offline: the UI, apps and themes work,
+the game's server features don't.
+
+Back to stock firmware: the USB flasher at solana.com/breakpoint/badge/stock.
+Don't accept Settings > Software update on a Superteam OS badge unless you want
+stock Solana OS back.
+
+---
+
 # Solana OS
 
 Firmware for the Solana Breakpoint 2026 conference badge (ESP32-C5, ILI9341
@@ -71,7 +115,6 @@ The firmware itself builds standalone.
 
 ## License
 
-MIT (see `LICENSE`), except the fonts and logos in `main/assets/`, which the
-MIT license doesn't cover: the fonts are rendered from ABC Diatype and ABC
-Diatype Semi-Mono, and the logos are Solana Foundation brand assets. Both stay
-subject to their owners' terms; don't reuse them outside this firmware.
+MIT (see `LICENSE`), except the fonts and logos in `main/assets/`: the fonts are
+rendered from Archivo, Inter and JetBrains Mono (SIL OFL 1.1), and the logos are
+Superteam Brasil brand assets. See `LICENSE` for details.

@@ -131,9 +131,9 @@ static void status_create(lv_obj_t *scr)
     lv_obj_set_scrollable(bar, false);
 
     lv_obj_t *logo = lv_image_create(bar);
-    lv_image_set_src(logo, &img_logomark_16);
+    lv_image_set_src(logo, ui_light() ? &img_logomark_16_light : &img_logomark_16);
     lv_obj_align(logo, LV_ALIGN_LEFT_MID, 6, 0);
-    s_title = ui_label(bar, &sol_font_14, COL_TEXT, "Solana OS");
+    s_title = ui_label(bar, &sol_font_14, COL_TEXT, OS_NAME);
     lv_obj_align(s_title, LV_ALIGN_LEFT_MID, 30, 0);
     s_batt = ui_label(bar, &sol_mono_12, COL_TEXT, "");
     lv_obj_align(s_batt, LV_ALIGN_RIGHT_MID, -6, 0);
@@ -406,7 +406,7 @@ static void switch_to(const os_app_t *app)
     lv_obj_clean(s_root);
     lv_obj_scroll_to(s_root, 0, 0, LV_ANIM_OFF);
     s_app = app;
-    lv_label_set_text(s_title, app == &os_launcher ? "Solana OS" : app->name);
+    lv_label_set_text(s_title, app == &os_launcher ? OS_NAME : app->name);
     ESP_LOGI(TAG, "app: %s", app->id);
     if (app->on_enter) {
         app->on_enter(s_root);
@@ -654,14 +654,13 @@ void os_splash(void)
     lv_obj_t *scr = lv_screen_active();
     lv_obj_clean(scr);
     lv_obj_set_style_bg_color(scr, ui_col(COL_BG), 0);
+    // Superteam Brasil primary (vertical) logo: symbol over "superteam BRASIL".
     lv_obj_t *logo = lv_image_create(scr);
-    lv_image_set_src(logo, &img_logomark_72);
-    lv_obj_align(logo, LV_ALIGN_CENTER, 0, -42);
-    lv_obj_t *name = ui_label(scr, &sol_font_32, COL_TEXT, "Solana OS");
-    lv_obj_align(name, LV_ALIGN_CENTER, 0, 28);
+    lv_image_set_src(logo, ui_light() ? &img_st_vertical_light : &img_st_vertical);
+    lv_obj_align(logo, LV_ALIGN_CENTER, 0, -22);
     lv_obj_t *ver = ui_label(scr, &sol_mono_12, COL_DIM, "");
-    lv_label_set_text_fmt(ver, "v%s  " LV_SYMBOL_BULLET "  ESP32-C5", esp_app_get_description()->version);
-    lv_obj_align(ver, LV_ALIGN_CENTER, 0, 58);
+    lv_label_set_text_fmt(ver, "OS v%s  " LV_SYMBOL_BULLET "  ESP32-C5", esp_app_get_description()->version);
+    lv_obj_align(ver, LV_ALIGN_CENTER, 0, 62);
     ui_gradient_bar(scr, 60, 208, 200, 4);
     lvgl_port_unlock();
 }
@@ -713,7 +712,7 @@ void os_theme_apply(void)
         s_app->on_exit();
     }
     lv_obj_clean(s_root);
-    lv_label_set_text(s_title, s_app == &os_launcher ? "Solana OS" : s_app->name);
+    lv_label_set_text(s_title, s_app == &os_launcher ? OS_NAME : s_app->name);
     if (s_app->on_enter) {
         s_app->on_enter(s_root);
     }

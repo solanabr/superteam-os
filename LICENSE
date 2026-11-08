@@ -22,8 +22,10 @@ SOFTWARE.
 
 Third-party code keeps its own license: Lua 5.5.1 (main/lua/vendor/LICENSE, MIT).
 
-Not covered by this license: the fonts and logos in main/assets/. The fonts
-(sol_font_*.c, sol_mono_*.c) are bitmaps rendered from the ABC Diatype and ABC
-Diatype Semi-Mono typefaces; the logos (img_*.c) are Solana Foundation brand
-assets (https://solana.com/brand). Both remain subject to their owners' terms
-and may not be reused outside this firmware without their permission.
+Not covered by this license: the fonts and logos in main/assets/ and their
+sources in tools/fonts/ and tools/brand/ (Superteam Brasil edition).
+- Fonts (sol_font_*.c, sol_mono_*.c) are bitmaps rendered from Archivo, Inter and
+  JetBrains Mono, each under the SIL Open Font License 1.1 (tools/fonts/src/*-OFL.txt).
+- Logos (img_*.c, tools/brand/) are Superteam Brasil brand assets
+  (https://www.superteam.com.br/en/brand), subject to Superteam Brasil's terms.
+No Solana Foundation fonts or logos are included in this edition.

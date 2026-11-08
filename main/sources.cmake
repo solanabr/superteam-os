@@ -32,8 +32,8 @@ set(SOLANA_OS_SRCS
     lua/lua_fs.c lua/lua_install.c lua/lua_code.c lua/lua_ws.c
     ${SOLANA_OS_LUA_VENDOR_SRCS}
     assets/sol_mono_12.c assets/sol_font_14.c assets/sol_font_20.c assets/sol_font_32.c
-    assets/img_logomark_16.c assets/img_logomark_40.c assets/img_logomark_72.c
-    assets/img_foundation.c assets/img_foundation_black.c
+    assets/img_logomark_16.c assets/img_logomark_16_light.c assets/img_logomark_40.c assets/img_logomark_40_light.c
+    assets/img_st_vertical.c assets/img_st_vertical_light.c assets/img_st_horizontal.c assets/img_st_horizontal_light.c
 )
 
 set(SOLANA_OS_DEVICE_SRCS

@@ -23,20 +23,22 @@ lv_color_t ui_col(uint32_t c)
 {
     if (ui_light()) {
         switch (c) {
-        case COL_BG:        c = 0xFFFFFF; break;
-        case COL_PANEL:     c = 0xF4F3F8; break;
-        case COL_PANEL_HI:  c = 0xE8E6F0; break;
-        case COL_BORDER:    c = 0xD5D2E0; break;
-        case COL_TEXT:      c = 0x000000; break;
-        case COL_DIM:       c = 0x6B6880; break;
-        case COL_GREEN:     c = 0x0A9E62; break;
-        case COL_YELLOW:    c = 0x8F8A00; break;
-        case COL_AQUA:      c = 0x0089A8; break;
-        case COL_LIME:      c = 0x3A9A28; break;
-        case COL_LPURPLE:   c = 0x6B5CF0; break;
-        case COL_BLUE:      c = 0x2A76D2; break;
-        case COL_ORANGE:    c = 0xE04E1E; break;
-        case COL_PINK:      c = 0xC8319A; break;
+        // Superteam Brasil light theme: Off-White surfaces, Dark Green text,
+        // and ST Green where the dark theme highlights in Yellow.
+        case COL_BG:        c = 0xF5E8CA; break;
+        case COL_PANEL:     c = 0xEFE0BC; break;
+        case COL_PANEL_HI:  c = 0xE6D4AA; break;
+        case COL_BORDER:    c = 0xD6C394; break;
+        case COL_TEXT:      c = 0x1B231D; break;
+        case COL_DIM:       c = 0x6E6852; break;
+        case COL_GREEN:     c = COL_STGREEN; break;
+        case COL_YELLOW:    c = 0xA86500; break;
+        case COL_AQUA:      c = 0x00798F; break;
+        case COL_LIME:      c = 0x2F7D1F; break;
+        case COL_LPURPLE:   c = 0x5B4FD0; break;
+        case COL_BLUE:      c = 0x2A6BC0; break;
+        case COL_ORANGE:    c = 0xC9441A; break;
+        case COL_PINK:      c = 0xB02B88; break;
         default:            break;
         }
     }

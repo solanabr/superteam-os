@@ -10,10 +10,10 @@
 static void enter(lv_obj_t *root)
 {
     lv_obj_t *logo = lv_image_create(root);
-    lv_image_set_src(logo, &img_logomark_40);
+    lv_image_set_src(logo, ui_light() ? &img_logomark_40_light : &img_logomark_40);
     lv_obj_align(logo, LV_ALIGN_TOP_MID, 0, 12);
 
-    lv_obj_t *name = ui_label(root, &sol_font_20, COL_TEXT, "Solana OS");
+    lv_obj_t *name = ui_label(root, &sol_font_20, COL_TEXT, OS_NAME);
     lv_obj_align(name, LV_ALIGN_TOP_MID, 0, 60);
 
     // The server's badge ID once it has one, else the end of the MAC.
@@ -40,13 +40,13 @@ static void enter(lv_obj_t *root)
 
     ui_gradient_bar(root, 90, 126, OS_ROOT_W - 180, 3);
 
-    lv_obj_t *blurb = ui_label(root, &sol_mono_12, COL_TEXT, "ESP32-C5 " LV_SYMBOL_BULLET " Wi-Fi 6 2.4/5 GHz "
-                               LV_SYMBOL_BULLET " ESP-NOW");
+    lv_obj_t *blurb = ui_label(root, &sol_mono_12, COL_TEXT, "Based on Solana OS " LV_SYMBOL_BULLET " ESP32-C5");
     lv_obj_align(blurb, LV_ALIGN_TOP_MID, 0, 138);
 
-    lv_obj_t *foundation = lv_image_create(root);
-    lv_image_set_src(foundation, ui_light() ? &img_foundation_black : &img_foundation);
-    lv_obj_align(foundation, LV_ALIGN_BOTTOM_MID, 0, -UI_HINT_H - 12);
+    // Superteam Brasil secondary (horizontal) logo: Yellow on dark, Emerald Green on light.
+    lv_obj_t *wordmark = lv_image_create(root);
+    lv_image_set_src(wordmark, ui_light() ? &img_st_horizontal_light : &img_st_horizontal);
+    lv_obj_align(wordmark, LV_ALIGN_BOTTOM_MID, 0, -UI_HINT_H - 10);
 
     ui_hint(root, "CANCEL exit");
 }

@@ -394,7 +394,7 @@ static void tick_sd(void)
 // Display + LED patterns
 
 enum { LED_OFF, LED_GRADIENT, LED_CHASE, LED_WHITE, LED_PATTERNS };
-static const char *const led_names[LED_PATTERNS] = {"off", "Solana gradient", "rainbow chase", "white"};
+static const char *const led_names[LED_PATTERNS] = {"off", "Superteam gradient", "rainbow chase", "white"};
 static int s_led_mode;
 static lv_obj_t *s_led_label;
 

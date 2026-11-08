@@ -22,7 +22,7 @@ static void row(int i, ui_row_t *r, void *ctx)
     case ROW_THEME: {
         bool light = ui_light();
         strlcpy(r->title, "Theme", sizeof(r->title));
-        strlcpy(r->sub, light ? "Black on white, QR code included" : "White on black, QR code included",
+        strlcpy(r->sub, light ? "Off-White, QR code included" : "Dark Green, QR code included",
                 sizeof(r->sub));
         strlcpy(r->right, light ? "Light" : "Dark", sizeof(r->right));
         r->right_color = COL_TEXT;

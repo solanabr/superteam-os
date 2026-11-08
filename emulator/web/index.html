@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Superteam OS Emulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112.5,700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --emerald: #008b4c; --yellow: #ffd23f; --green: #306c40;
+    --dark: #1b231d; --off: #f5e8ca;
+    --bg: var(--off); --fg: var(--dark); --muted: #6e6852; --panel: #efe0bc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #121813; --fg: var(--off); --muted: #a39e86; --panel: #1b231d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 Inter, system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-family: Archivo, sans-serif; font-stretch: 112.5%; font-weight: 700; font-size: 26px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 20px; color: var(--muted); }
+  .badge {
+    position: relative; margin: 0 auto; width: min(100%, 520px);
+    background: var(--emerald); border-radius: 28px; padding: 44px 48px 28px 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  }
+  .leds-top { position: absolute; top: 16px; left: 28px; right: 48px; display: flex; justify-content: space-between; }
+  .leds-side { position: absolute; right: 18px; top: 44px; bottom: 120px; display: flex; flex-direction: column; justify-content: space-around; }
+  .led { width: 12px; height: 12px; border-radius: 50%; background: #0d1a10; border: 1px solid rgba(0,0,0,.4); transition: background .05s, box-shadow .05s; }
+  canvas { display: block; width: 100%; aspect-ratio: 4 / 3; image-rendering: pixelated; border-radius: 6px; background: #000; border: 6px solid var(--dark); }
+  .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; gap: 12px; }
+  .dpad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 4px; }
+  .actions { display: flex; flex-direction: column; gap: 8px; }
+  button.k {
+    font: 600 13px Inter, sans-serif; border: 0; border-radius: 10px; cursor: pointer;
+    background: var(--dark); color: var(--off); min-height: 44px; padding: 0 14px;
+    user-select: none; -webkit-user-select: none; touch-action: none;
+  }
+  button.k.sel { background: var(--yellow); color: var(--dark); }
+  button.k:active, button.k.down { transform: translateY(1px); filter: brightness(1.25); }
+  .up { grid-area: 1 / 2; } .left { grid-area: 2 / 1; } .right { grid-area: 2 / 3; } .down { grid-area: 3 / 2; }
+  .help { color: var(--muted); font-size: 13px; margin: 14px 0 0; text-align: center; }
+  kbd { font: 12px ui-monospace, monospace; background: var(--panel); border-radius: 4px; padding: 1px 5px; }
+  details { margin-top: 24px; background: var(--panel); border-radius: 12px; padding: 10px 14px; }
+  summary { cursor: pointer; font-weight: 500; }
+  pre { height: 220px; overflow: auto; font: 12px/1.4 ui-monospace, monospace; white-space: pre-wrap; margin: 10px 0; }
+  form { display: flex; gap: 8px; }
+  input { flex: 1; font: 13px ui-monospace, monospace; padding: 8px; border-radius: 8px; border: 1px solid var(--muted); background: var(--bg); color: var(--fg); min-width: 0; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Superteam OS</h1>
+  <p class="sub">Solana OS, edição Superteam Brasil: o firmware do badge compilado para WebAssembly.</p>
+
+  <div class="badge">
+    <div class="leds-top" id="ledsTop"></div>
+    <div class="leds-side" id="ledsSide"></div>
+    <canvas id="screen" width="320" height="240" aria-label="Tela do badge"></canvas>
+    <div class="controls">
+      <div class="dpad">
+        <button class="k up" data-key="0" aria-label="Cima">▲</button>
+        <button class="k left" data-key="2" aria-label="Esquerda">◀</button>
+        <button class="k right" data-key="3" aria-label="Direita">▶</button>
+        <button class="k down" data-key="1" aria-label="Baixo">▼</button>
+      </div>
+      <div class="actions">
+        <button class="k sel" data-key="4">SELECT</button>
+        <button class="k" data-key="5">CANCEL</button>
+        <button class="k" data-key="6">HOME</button>
+      </div>
+    </div>
+  </div>
+  <p class="help">Teclado: <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd>, <kbd>Enter</kbd> SELECT, <kbd>Esc</kbd> CANCEL, <kbd>H</kbd> HOME</p>
+
+  <details>
+    <summary>Console</summary>
+    <pre id="log"></pre>
+    <form id="cmd"><input id="line" placeholder="ex.: help, theme, open about, shot" autocomplete="off"><button class="k">Enviar</button></form>
+    <div class="row">
+      <button class="k" type="button" id="reboot">Reiniciar</button>
+      <button class="k" type="button" id="wipe">Apagar dados (NVS)</button>
+    </div>
+  </details>
+</main>
+
+<script>
+const W = 320, H = 240;
+const KEYS = { ArrowUp: 0, ArrowDown: 1, ArrowLeft: 2, ArrowRight: 3, Enter: 4, Escape: 5, Backspace: 5, h: 6, H: 6 };
+const logEl = document.getElementById('log');
+const ctx = document.getElementById('screen').getContext('2d');
+const img = ctx.createImageData(W, H);
+const leds = [];
+for (let i = 0; i < 8; i++) {
+  const d = document.createElement('div'); d.className = 'led';
+  (i < 6 ? document.getElementById('ledsTop') : document.getElementById('ledsSide')).appendChild(d);
+  leds.push(d);
+}
+function log(s) { logEl.textContent += s + '\n'; logEl.scrollTop = logEl.scrollHeight; }
+
+let M = null, pressed = 0, lastFrame = -1, lastLeds = -1, raf = 0;
+
+async function boot(reason) {
+  if (M) { try { M._emu_halt(); } catch (e) {} cancelAnimationFrame(raf); }
+  logEl.textContent = '';
+  M = await SolanaOS({
+    print: log, printErr: log,
+    resetReason: reason || 'poweron',
+    onRestart: () => boot('sw'),
+  });
+  lastFrame = -1; lastLeds = -1;
+  const draw = () => {
+    const f = M._emu_frame();
+    if (f !== lastFrame) {
+      lastFrame = f;
+      const p = M._emu_framebuffer() >> 2;
+      img.data.set(new Uint8ClampedArray(M.HEAPU32.buffer, p * 4, W * H * 4));
+      ctx.putImageData(img, 0, 0);
+    }
+    const v = M._emu_leds_version();
+    if (v !== lastLeds) {
+      lastLeds = v;
+      const p = M._emu_leds() >> 2;
+      for (let i = 0; i < 8; i++) {
+        const c = M.HEAPU32[p + i];
+        // Firmware caps LEDs at a low level; scale up so they read on a screen.
+        const r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255, m = Math.max(r, g, b);
+        if (!m) { leds[i].style.background = ''; leds[i].style.boxShadow = ''; continue; }
+        const k = 255 / m, col = `rgb(${r * k | 0},${g * k | 0},${b * k | 0})`;
+        leds[i].style.background = col; leds[i].style.boxShadow = `0 0 10px ${col}`;
+      }
+    }
+    raf = requestAnimationFrame(draw);
+  };
+  draw();
+}
+
+function setKey(key, down) {
+  if (!M) return;
+  const line = M._emu_button_line(key);
+  pressed = down ? (pressed | line) : (pressed & ~line);
+  M._emu_buttons_set(pressed);
+}
+document.querySelectorAll('button[data-key]').forEach(b => {
+  const k = +b.dataset.key;
+  b.addEventListener('pointerdown', e => { e.preventDefault(); b.setPointerCapture(e.pointerId); setKey(k, true); });
+  const up = () => setKey(k, false);
+  b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
+});
+addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const k = KEYS[e.key]; if (k === undefined) return;
+  e.preventDefault(); if (!e.repeat) setKey(k, true);
+});
+addEventListener('keyup', e => { const k = KEYS[e.key]; if (k !== undefined && e.target.tagName !== 'INPUT') setKey(k, false); });
+
+document.getElementById('cmd').addEventListener('submit', e => {
+  e.preventDefault();
+  const el = document.getElementById('line'), s = el.value.trim(); if (!s || !M) return;
+  log('> ' + s); M.ccall('emu_console', null, ['string'], [s]); el.value = '';
+});
+document.getElementById('reboot').onclick = () => boot('poweron');
+document.getElementById('wipe').onclick = () => {
+  try { Object.keys(localStorage).filter(k => k.startsWith('solana-os-emu:')).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  location.reload();
+};
+</script>
+<script src="solana-os.js" onload="boot()"></script>
+</body>
+</html>

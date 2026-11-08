@@ -1,25 +1,38 @@
 #pragma once
 
-// Solana brand palette (solana.com/brand, web/static/brand/Color Palettes).
-#define COL_PURPLE      0x9945FF    // Solana Purple
-#define COL_GREEN       0x14F195    // Solana Green
+// Superteam Brasil edition. Palette from the Superteam Brasil brand guide
+// (superteam.com.br/en/brand, stbr-brand-guide.pdf, March 2026):
+//   Emerald Green #008b4c, Yellow #ffd23f, Green #306c40,
+//   Dark Green #1b231d, Off-White #f5e8ca.
+//
+// The macro names stay as upstream's because Lua apps pick colours by these
+// names ("purple", "green", ...: main/lua/lua_ui.c). Read them as roles:
+//   COL_PURPLE = primary brand colour (fills, borders, gradient start)
+//   COL_GREEN  = highlight (focus, selection, !LAMPs, gradient end)
+// Every value must stay distinct: ui_col() switches on them.
+
+#define OS_NAME         "Superteam OS"
+
+#define COL_PURPLE      0x008B4C    // ST Emerald Green
+#define COL_GREEN       0xFFD23F    // ST Yellow
+#define COL_STGREEN     0x306C40    // ST Green
 #define COL_PINK        0xEB54BC
 #define COL_LPURPLE     0xB6B0FF
 #define COL_BLUE        0x64A8F2
 #define COL_AQUA        0x80ECFF
 #define COL_LIME        0xACFF9B
-#define COL_YELLOW      0xE8F180
+#define COL_YELLOW      0xFFA62B    // amber: warnings, kept apart from ST Yellow
 #define COL_ORANGE      0xFF754A
 
-// UI surfaces on the black brand background
-#define COL_BG          0x000000
-#define COL_PANEL       0x111116
-#define COL_PANEL_HI    0x1C1B26
-#define COL_BORDER      0x2A2935
-#define COL_TEXT        0xFFFFFF
-#define COL_DIM         0x8E8C9E
+// UI surfaces on the ST Dark Green background
+#define COL_BG          0x1B231D    // ST Dark Green
+#define COL_PANEL       0x243029
+#define COL_PANEL_HI    0x2E3D33
+#define COL_BORDER      0x3B4C40
+#define COL_TEXT        0xF5E8CA    // ST Off-White
+#define COL_DIM         0xA39E86
 
-#define COL_OK          COL_GREEN
+#define COL_OK          COL_LIME
 #define COL_WARN        COL_YELLOW
 #define COL_ERR         COL_ORANGE
 
