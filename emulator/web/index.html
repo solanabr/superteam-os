@@ -80,6 +80,7 @@
     <pre id="log"></pre>
     <form id="cmd"><input id="line" placeholder="ex.: help, theme, open about, shot" autocomplete="off"><button class="k">Enviar</button></form>
     <div class="row">
+      <button class="k sel" type="button" id="loadApp">Carregar Superteam Snake</button>
       <button class="k" type="button" id="reboot">Reiniciar</button>
       <button class="k" type="button" id="wipe">Apagar dados (NVS)</button>
     </div>
@@ -98,13 +99,43 @@ for (let i = 0; i < 8; i++) {
   (i < 6 ? document.getElementById('ledsTop') : document.getElementById('ledsSide')).appendChild(d);
   leds.push(d);
 }
-function log(s) { logEl.textContent += s + '\n'; logEl.scrollTop = logEl.scrollHeight; }
+let ready = null;  // resolves when the badge's console is up
+function log(s) {
+  logEl.textContent += s + '\n'; logEl.scrollTop = logEl.scrollHeight;
+  if (ready && s.includes('os: app: launcher')) { ready.resolve(); }
+}
+
+// Apps in this repo (apps/<id>/), copied onto the emulated microSD card the way the
+// console's `lua put` does, then started. ?app=<id> in the URL loads one at boot.
+// Without the Solana badge server the emulator is offline: http/rpc answer "offline".
+const DEV_APPS = {
+  'stbr-snake': ['app.json', 'main.lua', 'screens/menu.lua', 'screens/game.lua', 'screens/wallet.lua',
+                 'screens/send.lua', 'screens/help.lua'],
+};
+async function loadApp(id) {
+  await ready.promise;
+  const con = s => M.ccall('emu_console', null, ['string'], [s]);
+  con('open home');                                    // a running app can't be replaced
+  await new Promise(r => setTimeout(r, 400));
+  for (const f of DEV_APPS[id]) {
+    const res = await fetch(`apps/${id}/${f}`, { cache: 'no-store' });
+    if (!res.ok) { log(`! ${f}: ${res.status}`); return; }
+    const data = new Uint8Array(await res.arrayBuffer());
+    con(`lua put ${id} ${f} begin`);
+    for (let i = 0; i < data.length; i += 96) {
+      con(`lua put ${id} ${f} ${btoa(String.fromCharCode(...data.subarray(i, i + 96)))}`);
+    }
+    con(`lua put ${id} ${f} end`);
+  }
+  con(`lua run ${id}`);
+}
 
 let M = null, pressed = 0, lastFrame = -1, lastLeds = -1, raf = 0;
 
 async function boot(reason) {
   if (M) { try { M._emu_halt(); } catch (e) {} cancelAnimationFrame(raf); }
   logEl.textContent = '';
+  ready = Promise.withResolvers();
   M = await SolanaOS({
     print: log, printErr: log,
     resetReason: reason || 'poweron',
@@ -162,6 +193,9 @@ document.getElementById('cmd').addEventListener('submit', e => {
   log('> ' + s); M.ccall('emu_console', null, ['string'], [s]); el.value = '';
 });
 document.getElementById('reboot').onclick = () => boot('poweron');
+document.getElementById('loadApp').onclick = () => loadApp('stbr-snake');
+const wantApp = new URLSearchParams(location.search).get('app');
+if (wantApp && DEV_APPS[wantApp]) { addEventListener('load', () => loadApp(wantApp)); }
 document.getElementById('wipe').onclick = () => {
   try { Object.keys(localStorage).filter(k => k.startsWith('solana-os-emu:')).forEach(k => localStorage.removeItem(k)); } catch (e) {}
   location.reload();

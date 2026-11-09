@@ -7,3 +7,6 @@ shots/
 .venv/
 tools/fonts/build/
 emulator/web/solana-os.*
+node_modules/
+.vercel/
+.env*

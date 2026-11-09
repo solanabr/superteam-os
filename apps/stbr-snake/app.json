@@ -1,0 +1,12 @@
+{
+  "id": "stbr-snake",
+  "name": "Superteam Snake",
+  "version": "1.0.0",
+  "author": "@SuperteamBR",
+  "summary": "Eat dots, earn DevNet SOL. Superteam Brasil faucet.",
+  "icon": "play",
+  "accent": "FFD23F",
+  "category": "games",
+  "permissions": ["led", "http", "rpc"],
+  "hosts": ["stbr-snake.vercel.app"]
+}
