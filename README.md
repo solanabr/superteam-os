@@ -40,7 +40,8 @@ the game's server features don't.
 
 `apps/stbr-snake/`: a snake game that pays DevNet SOL from a Superteam Brasil faucet into
 the player's own wallet (cash out from 10 dots, or risk the pot), with its Vercel server.
-It runs on any badge, stock or not. See its README. Try it in the local emulator at
+It runs on any badge, stock or not. See its README; launch steps and what's left:
+`apps/stbr-snake/LANCAMENTO.md`. Try it in the local emulator at
 `http://127.0.0.1:8787/?app=stbr-snake` (offline there: practice games).
 
 Back to stock firmware: the USB flasher at solana.com/breakpoint/badge/stock.

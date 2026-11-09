@@ -1,5 +1,8 @@
 # Superteam Snake
 
+> **Lançamento:** o passo a passo para publicar e o que ainda falta estão em
+> [LANCAMENTO.md](LANCAMENTO.md).
+
 A badge game for the App Store: eat the yellow dots, earn DevNet SOL from the Superteam
 Brasil faucet. Each dot puts 0.01 SOL in the pot. From 10 dots (0.1 SOL) the player can
 cash out from the pause menu (SELECT), into their own DevNet wallet, up to 0.5 SOL a day;
