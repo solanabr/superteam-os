@@ -66,8 +66,8 @@ class RedisStore implements Store {
     const p = this.r.multi();
     p.incrby(key, by);
     p.expire(key, ttl, 'NX');
-    const [n] = (await p.exec()) as [number, number];
-    return n;
+    const [n] = (await p.exec()) as [number | string, number];
+    return Number(n);
   }
 }
 
@@ -78,7 +78,9 @@ export function getStore(): Store {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
   if (url && token) {
-    store = new RedisStore(new Redis({ url, token }));
+    // Values stay strings: by default the client would turn a stored JSON text (a game
+    // session) back into an object.
+    store = new RedisStore(new Redis({ url, token, automaticDeserialization: false }));
   } else if (process.env.VERCEL) {
     // Serverless instances don't share memory: the daily limit wouldn't hold.
     throw new Error('No Redis: add Upstash to the Vercel project (Storage / Marketplace)');

@@ -3,16 +3,16 @@
 Guia para colocar o jogo na App Store dos badges e manter o faucet funcionando.
 Detalhes técnicos estão no [README](README.md).
 
-## Onde estamos (9 nov 2026)
+## Onde estamos (13 nov 2026)
 
 | | Status |
 |---|---|
 | Jogo (app do badge) | ✅ pronto, testado no emulador local (offline) |
 | Servidor do faucet | ✅ no ar em https://stbr-snake.vercel.app (Vercel, conta pessoal "Kuka's projects") |
 | Segredos no servidor (`TREASURY_SECRET`, `PLAYER_KEY_SECRET`, `PUBLIC_ORIGIN`) | ✅ configurados |
-| Banco (Upstash Redis) | ❌ falta: aceitar os termos (passo 1) |
-| Faucet com saldo | ❌ falta: fundear (passo 2) |
-| Teste com rede de verdade (pagamento ponta a ponta) | ❌ falta (passo 3) |
+| Banco (Upstash Redis) | ✅ ligado (`stbr-snake-kv`, plano grátis) |
+| Faucet com saldo | ✅ ~6,8 SOL (recarregar quando baixar) |
+| Teste com rede de verdade (pagamento ponta a ponta) | ✅ servidor testado na DevNet: saque de 0,1 SOL, sessão usada uma vez, Send to Phantom. Falta o teste no emulador do site (passo 3) |
 | Publicado na App Store | ❌ falta (passo 4) |
 
 ## O que falta, em ordem
